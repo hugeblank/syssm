@@ -53,14 +53,7 @@ This API is returned when a service is injected, and started.
 
 ## Writing a Service
 
-For the sake of the end user, default means of getting output from the user have been revoked. Those APIs and functions would be: io, term, paintutils, window, print, write, printError. The alternative function for all forms of output is called `log`
-
-`log`: Log information directly related to the service
-
-- **Parameters**
-  - _string_: information. Multiple comma seperated strings can be provided
-- **Returns**
-  - _none_
+For the sake of the end user, some means of getting output to the user have been overwritten, and some APIs have been revoked. Those APIs and functions that were revoked would be: `io`, `term`, `paintutils`, and `window`. The functions `print`, `write`, and `printError` have been redirected to write to the logs, and `error` has been redirected to write to an error file and then the service is terminated.
 
 Services can either be provided as standalone files, placed in the `init.d` directory. On startup these will be loaded. Each file is treated like a service, no need to call `syssm.inject`! Of course if you don't want to do that, `inject` is your other option.
 

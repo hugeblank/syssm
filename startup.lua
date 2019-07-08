@@ -68,7 +68,9 @@ if not syssm then
         do
             local blacklist = { "io", "term", "paintutils", "window", "print", "write", "error", "printError", "_G"}
             env = {
-                log = locallog.log,
+                print = locallog.log,
+                write = locallog.log,
+                printError = locallog.log,
                 error = locallog.error,
                 _G = env
             }
@@ -173,7 +175,8 @@ if not syssm then
     -- Apply syssm globally.
     _G.syssm = syssm
 
-    do
+    -- Add static thread that dynamically loads services
+    raisin.thread(function()
         if not fs.exists("init.d") then
             fs.makeDir("init.d")
         end
@@ -195,12 +198,20 @@ if not syssm then
             end
         end
         r("init.d")
-    end
+    end)
 
-    local suc, err = pcall(raisin.manager.run, os.pullEventRaw)
+    local suc, error = pcall(function() raisin.manager.run(os.pullEventRaw, 2) end)
+
     if not suc then
         printError(err)
         print("Press any key to reboot")
         os.pullEvent("key")
+        os.reboot()
+    else
+        term.setTextColor(colors.yellow)
+        print("Goodbye!")
+        term.setTextColor(colors.white)
+        sleep(1)
+        os.shutdown()
     end
 end

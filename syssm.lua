@@ -5,7 +5,7 @@ if not syssm then
     return "idiots..."
 end
 local args = {...}
-local usage = {"syssm status <name>", "syssm save <name> <logs|error>", "syssm pause <name>", "syssm resume <name>"}
+local usage = {"syssm status <name> [log display count]", "syssm save <name> <logs|error>", "syssm pause <name>", "syssm resume <name>"}
 
 local action = table.remove(args, 1)
 local name = table.remove(args, 1)
@@ -39,7 +39,7 @@ if action == "status" then
         term.setTextColor(colors.white)
         if status ~= "Terminated" then
             print("Latest data:")
-            print(syssm.getServices()[name].getLogs(5))
+            print(syssm.getServices()[name].getLogs(table.remove(args, 1) or 5))
         else
             print("Error:")
             print(syssm.getServices()[name].getError())
